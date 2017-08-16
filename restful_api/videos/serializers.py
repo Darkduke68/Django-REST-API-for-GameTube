@@ -28,7 +28,7 @@ class VideoSerializer(serializers.HyperlinkedModelSerializer):
     """
 
     url = VideoUrlHyperlinkedIdentityField("video_detail_api")
-    category = CategorySerializer(many=False, read_only=True)
+    # category = CategorySerializer(many=False, read_only=True)
     comment_set = CommentSerializer(many=True, read_only=True)
     category_url = serializers.CharField(source='category.absolute_url', read_only=True)
 

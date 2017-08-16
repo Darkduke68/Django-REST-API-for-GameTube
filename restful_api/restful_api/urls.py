@@ -21,5 +21,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api-token/', include('api_token.urls')),
-
+    url(r'^api/comment/', include('comments.urls')),
+    url(r'^api/category/', include('videos.urls')),
 ]

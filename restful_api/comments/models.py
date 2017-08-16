@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.db import models
-from django.contrib.auth.models import User
 
 from videos.models import Video
 
@@ -37,7 +36,6 @@ class CommentManager(models.Manager):
 class Comment(models.Model):
     """Model stores user comment related to a particular video."""
 
-    user = models.ForeignKey(User)
     parent = models.ForeignKey("self", null=True, blank=True)
     video = models.ForeignKey(Video, null=True, blank=True)
     text = models.TextField()

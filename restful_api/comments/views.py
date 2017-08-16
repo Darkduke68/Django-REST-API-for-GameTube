@@ -4,6 +4,11 @@ from .models import Comment
 from .serializers import CommentCreateSerializer, CommentUpdateSerializer, CommentSerializer
 
 
+# ===============================
+# Customized View using generics
+# ===============================
+
+
 class CommentListAPIView(generics.ListAPIView):
     """Endpoint to represent a collection of Comment model instances."""
 

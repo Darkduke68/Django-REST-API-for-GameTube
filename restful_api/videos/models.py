@@ -5,7 +5,6 @@ from django.db.models.signals import post_save
 from django.utils.text import slugify
 from django.urls import reverse
 
-
 # =============================
 # section for video models
 # =============================
@@ -41,6 +40,7 @@ class Video(models.Model):
     category = models.ForeignKey("Category", default=1)
     created = models.DateTimeField(auto_now_add=True, auto_now=False, null=True)
     modified = models.DateTimeField(auto_now_add=False, auto_now=True, null=True)
+    image = models.ImageField(upload_to='images/')
 
     objects = VideoManager()
 
@@ -141,7 +141,7 @@ class Genre(models.Model):
     content_object = GenericForeignKey('content_type', 'object_id')
 
     def __str__(self):
-        return self.tag
+        return self.genre
 
 
 

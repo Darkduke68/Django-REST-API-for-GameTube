@@ -114,11 +114,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-# JWT_AUTH = {
-#     'JWT_RESPONSE_PAYLOAD_HANDLER':
-#         'srvup.utils.jwt_response_payload_handler',
-#     'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=30000),
-# }
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/

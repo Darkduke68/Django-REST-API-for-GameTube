@@ -46,7 +46,9 @@ class CategoryDetailAPIView(generics.RetrieveAPIView):
 
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    lookup_field = 'slug'
+    lookup_url_kwarg = 'category_slug'
 
-    def get_object(self):
-        slug = self.kwargs["slug"]
-        return get_object_or_404(Category, slug=slug)
+    # def get_object(self):
+    #     slug = self.kwargs["slug"]
+    #     return get_object_or_404(Category, slug=slug)

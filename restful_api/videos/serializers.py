@@ -16,7 +16,7 @@ class VideoUrlHyperlinkedIdentityField(serializers.HyperlinkedIdentityField):
     def get_url(self, instance, view_name, request, format):
         kwargs = {
             'category_slug': instance.category.slug,
-            "video_slug": instance.slug
+            'video_slug': instance.slug
         }
         return reverse(view_name, kwargs=kwargs, request=request, format=format)
 
@@ -27,23 +27,18 @@ class VideoSerializer(serializers.HyperlinkedModelSerializer):
     Also flatten the nested foreign keys relationship such as Category, and Comments.
     """
 
-    url = VideoUrlHyperlinkedIdentityField("video_detail_api")
-    # category = CategorySerializer(many=False, read_only=True)
+    url = VideoUrlHyperlinkedIdentityField(view_name='video_detail_api')
     comment_set = CommentSerializer(many=True, read_only=True)
-    category_url = serializers.CharField(source='category.absolute_url', read_only=True)
 
     class Meta:
         model = Video
         fields = [
-            "url",
+            'url',
             'id',
             'slug',
             'title',
             'embed_code',
-            'created',
-            'category',
-            "category_url",
-            "comment_set",
+            'comment_set',
         ]
 
 
@@ -58,13 +53,17 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
     Flatten one-to-many relationship with model Video, and return customized url.
     """
 
-    url = serializers.HyperlinkedIdentityField('category_detail_api', lookup_field='slug')
+    url = serializers.HyperlinkedIdentityField(
+        view_name='category_detail_api',
+        lookup_field='slug',
+        lookup_url_kwarg='category_slug'
+    )
     video_set = VideoSerializer(many=True)
 
     class Meta:
         model = Category
         fields = [
-            "url",
+            'url',
             'id',
             'slug',
             'title',

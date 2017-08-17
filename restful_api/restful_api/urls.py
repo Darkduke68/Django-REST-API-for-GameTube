@@ -16,11 +16,16 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
+from api_home.views import HomeAPIView
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^api-token/', include('api_token.urls')),
-    url(r'^api/comment/', include('comments.urls')),
-    url(r'^api/category/', include('videos.urls')),
+    url(r'^api/', include([
+        url(r'^$', HomeAPIView.as_view()),
+        url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
+        url(r'^token/', include('api_token.urls')),
+        url(r'^comment/', include('comments.urls')),
+        url(r'^category/', include('videos.urls'))]
+    ))
 ]

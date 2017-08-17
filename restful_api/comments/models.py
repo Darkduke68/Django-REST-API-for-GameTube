@@ -7,7 +7,7 @@ from videos.models import Video
 class CommentManager(models.Manager):
     def all(self):
         """Get all parent comments."""
-        return super(CommentManager, self).filter(parent=None)
+        return super(CommentManager, self).filter(root_comment=None)
 
     def recent(self):
         """Retrieve limited number of comments.
@@ -18,17 +18,17 @@ class CommentManager(models.Manager):
             limit_to = settings.RECENT_COMMENT_NUMBER
         except:
             limit_to = 4
-        return self.get_queryset().filter(parent=None)[:limit_to]
+        return self.get_queryset().filter(root_comment=None)[:limit_to]
 
-    def create_comment(self, user=None, text=None, video=None, parent=None):
+    def create_comment(self, user=None, text=None, video=None, root_comment=None):
         if not user:
             raise ValueError("Must include a user when adding a Comment")
 
         comment = self.model(user=user, text=text)
         if video is not None:
             comment.video = video
-        if parent is not None:
-            comment.parent = parent
+        if root_comment is not None:
+            comment.root_comment = root_comment
         comment.save(using=self._db)
         return comment
 
@@ -36,7 +36,7 @@ class CommentManager(models.Manager):
 class Comment(models.Model):
     """Model stores user comment related to a particular video."""
 
-    parent = models.ForeignKey("self", null=True, blank=True)
+    root_comment = models.ForeignKey("self", null=True, blank=True)
     video = models.ForeignKey(Video, null=True, blank=True)
     text = models.TextField()
     modified = models.DateTimeField(auto_now=True, auto_now_add=False)
@@ -55,15 +55,15 @@ class Comment(models.Model):
         return self.text
 
     @property
-    def is_child(self):
-        if self.parent is not None:
+    def is_reply(self):
+        if self.root_comment is not None:
             return True
         return False
 
     @property
-    def children(self):
+    def reply(self):
         """Only support one-level parent-child relationship."""
-        if self.is_child:
+        if self.is_reply:
             return None
         else:
-            return Comment.objects.filter(parent=self)
+            return Comment.objects.filter(root_comment=self)

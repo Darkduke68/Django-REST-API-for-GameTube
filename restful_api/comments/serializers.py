@@ -8,7 +8,7 @@ class CommentVideoUrlHyperlinkedIdentityField(serializers.HyperlinkedIdentityFie
     """Customized API url field."""
 
     def get_url(self, instance, view_name, request, format):
-        if instance.is_child:
+        if instance.is_reply:
             video = instance.parent.video
         else:
             video = instance.video
@@ -21,12 +21,11 @@ class CommentVideoUrlHyperlinkedIdentityField(serializers.HyperlinkedIdentityFie
 
 class CommentSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField("comment_detail_api", lookup_field='id')
-    video = CommentVideoUrlHyperlinkedIdentityField("video_detail_api")
-    children = serializers.SerializerMethodField(read_only=True)
+    reply = serializers.SerializerMethodField(read_only=True)
 
-    def get_children(self, instance):
-        queryset = Comment.objects.filter(parent__pk=instance.pk)
-        serializer = ChildCommentSerializer(queryset, context={"request": instance}, many=True)
+    def get_reply(self, instance):
+        queryset = Comment.objects.filter(root_comment__pk=instance.pk)
+        serializer = ReplyCommentSerializer(queryset, context={"request": instance}, many=True)
         return serializer.data
 
     class Meta:
@@ -34,8 +33,7 @@ class CommentSerializer(serializers.HyperlinkedModelSerializer):
         fields = [
             "url",
             'id',
-            "children",
-            'video',
+            "reply",
             'text',
         ]
 
@@ -58,11 +56,11 @@ class CommentCreateSerializer(serializers.ModelSerializer):
             'id',
             'text',
             'video',
-            'parent',
+            'root_comment',
             ]
 
 
-class ChildCommentSerializer(serializers.HyperlinkedModelSerializer):
+class ReplyCommentSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Comment

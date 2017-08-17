@@ -16,3 +16,4 @@ PyJWT==1.5.2
 pytz==2017.2
 requests==2.18.3
 urllib3==1.22
+whitenoise==3.3.0

@@ -10,7 +10,7 @@ httpie==0.9.9
 idna==2.5
 Markdown==2.6.8
 olefile==0.44
-Pillow==4.2.1
+Pillow==9.0.0
 Pygments==2.2.0
 PyJWT==1.5.2
 pytz==2017.2
